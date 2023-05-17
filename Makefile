@@ -21,7 +21,6 @@ help:
 
 create_venv:
 	$(PYTHON_BIN) -m venv $(VENV_NAME)
-	python3 -m ipykernel install --user --name=<projectname>
 
 install_gcp:
 	curl -o /tmp/google-cloud-cli-431.0.0-linux-x86_64.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-431.0.0-linux-x86_64.tar.gz
