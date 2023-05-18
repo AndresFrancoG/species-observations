@@ -24,10 +24,14 @@ jobs:
     - name: Creates virtual environment
       run: |
         make create_venv
+        
+    - name: Activates virtual environment
+      run: |
+        make create_venv
 
     - name: Install dependencies
       run: |
-        make install
+        source .venv/bin/activate
         
     - name: Set up Google Cloud authentication
       uses: google-github-actions/setup-gcloud@v0.4.0
