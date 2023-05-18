@@ -9,15 +9,21 @@ ROOT_DIR := notebooks
 # Find all subdirectories recursively
 SOURCES := $(wildcard $(ROOT_DIR)/*.ipynb) $(wildcard $(ROOT_DIR)/**/*.ipynb)
 
+# Find all subdirectories recursively, only keeps notebooks with name starting with ct_
+SOURCES_CLOUD := $(wildcard $(ROOT_DIR)/ct_*.ipynb) $(wildcard $(ROOT_DIR)/**/ct_*.ipynb)
+
 .PHONY: help create_venv install clean test
 
 help:
 	@echo "Available targets:"
 	@echo "  create_venv   Create a virtual environment"
+	@echo "  install_gcp   Intall and initializes gcp cli, and setups default authorization"
 	@echo "  install       Installs dependencies from requirements.txt"
-	@echo "  test          Runs unit tests for the project and checks if notebooks execute correctly"
+	@echo "  test          Cleans noteboouk outputs, runs unit tests for the project and checks if notebooks execute correctly using the local env"
+	@echo "  test_cloud    Cleans noteboouk outputs, runs unit tests for the project and checks if notebooks execute correctly using the test_cloud env"
 	@echo "  clean         Remove the virtual environment and installed packages"
-	@echo "  all           Creates virtual env, intalls dependencies, performs tests, and cleans environment"
+	@echo "  all           Executes: create_venv install test clean"
+	@echo "  all_cloud     Executes: create_venv install test_cloud clean"
 
 create_venv:
 	$(PYTHON_BIN) -m venv $(VENV_NAME)
@@ -35,7 +41,12 @@ install:
 	@$(PIP_BIN) install -r requirements.txt
 
 test:
+	jupyter nbconvert --clear-output --inplace $(SOURCES)
 	pytest --nbval $(SOURCES)
+
+test_cloud:
+	jupyter nbconvert --clear-output --inplace notebooks/driver.ipynb $(SOURCES_CLOUD)
+	pytest --nbval notebooks/driver.ipynb $(SOURCES_CLOUD)
 
 clean:
 	rm -rf $(VENV_NAME)
