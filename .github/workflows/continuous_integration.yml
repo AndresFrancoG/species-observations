@@ -28,7 +28,13 @@ jobs:
     - name: Install dependencies
       run: |
         make install
-
+        
+    - name: Set up Google Cloud authentication
+      uses: google-github-actions/setup-gcloud@v0.4.0
+      with:
+        service_account_key: ${{ secrets.GOOGLE_AUTH }}
+        project_id: bigqueryspecies
+        
     - name: Run tests
       run: |
         make test_cloud
