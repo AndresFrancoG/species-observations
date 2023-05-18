@@ -13,10 +13,12 @@ conf/**/*credentials*
 data/**
 logs/**
 .venv/**
+ct_*.ipynb
 
 # except their sub-folders
 !data/**/
 !logs/**/
+!data/01_raw/species_bigQuery_sample.csv
 
 # also keep all .gitkeep files
 !.gitkeep

@@ -1,8 +1,13 @@
 kedro==0.18.8
- kedro-datasets==1.2.0
+kedro-datasets==1.2.0
 pytest==7.3.1
 pytest-cov==4.0.0
 setuptools==67.7.2
 nbval==0.10.0
 gcloud==0.18.3
 google-cloud-bigquery==3.10.0
+pandas==2.0.1
+pandas-gbq==0.19.2
+papermill==2.4.0
+black==23.3.0
+nbconvert==7.4.0
