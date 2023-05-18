@@ -27,7 +27,7 @@ jobs:
         
     - name: Activates virtual environment
       run: |
-        make create_venv
+        source .venv/bin/activate
 
     - name: Install dependencies
       run: |
