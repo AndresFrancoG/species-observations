@@ -13,6 +13,7 @@ conf/**/*credentials*
 data/**
 logs/**
 .venv/**
+ct_*.ipynb
 
 # except their sub-folders
 !data/**/
