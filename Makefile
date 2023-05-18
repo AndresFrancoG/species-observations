@@ -40,12 +40,12 @@ install:
 	@$(PIP_BIN) install -r requirements.txt
 
 test:
-	jupyter nbconvert --clear-output --inplace $(SOURCES)
-	pytest --nbval $(SOURCES)
+	.venv/bin/jupyter nbconvert --clear-output --inplace $(SOURCES)
+	.venv/bin/pytest --nbval $(SOURCES)
 
 test_cloud:
-	jupyter nbconvert --clear-output --inplace notebooks/driver.ipynb $(SOURCES_CLOUD)
-	pytest --nbval notebooks/driver.ipynb $(SOURCES_CLOUD)
+	.venv/bin/jupyter nbconvert --clear-output --inplace notebooks/driver.ipynb $(SOURCES_CLOUD)
+	.venv/bin/pytest --nbval notebooks/driver.ipynb $(SOURCES_CLOUD)
 
 clean:
 	rm -rf $(VENV_NAME)
