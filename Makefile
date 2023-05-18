@@ -40,11 +40,12 @@ install:
 	@$(PIP_BIN) install -r requirements.txt
 
 test:
+	nb-clean clean notebook.ipynb -m/--preserve-cell-metadata
 	jupyter-nbconvert --clear-output --inplace $(SOURCES)
 	pytest --nbval $(SOURCES)
 
 test_cloud:
-	jupyter-nbconvert --clear-output --inplace notebooks/driver.ipynb $(SOURCES_CLOUD)
+	$(VENV_NAME)/bin/jupyter nbconvert --clear-output --inplace notebooks/driver.ipynb $(SOURCES_CLOUD)
 	pytest --nbval notebooks/driver.ipynb $(SOURCES_CLOUD)
 
 clean:
