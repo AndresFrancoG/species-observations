@@ -17,7 +17,7 @@ SOURCES_CLOUD := $(wildcard $(ROOT_DIR)/ct_*.ipynb) $(wildcard $(ROOT_DIR)/**/ct
 help:
 	@echo "Available targets:"
 	@echo "  create_venv   Create a virtual environment"
-	@echo "  install_gcp   Intall and initializes gcp cli, and setups default authorization"
+	@echo "  install_gcp   Intall and initializes gcp cli"
 	@echo "  install       Installs dependencies from requirements.txt"
 	@echo "  test          Cleans noteboouk outputs, runs unit tests for the project and checks if notebooks execute correctly using the local env"
 	@echo "  test_cloud    Cleans noteboouk outputs, runs unit tests for the project and checks if notebooks execute correctly using the test_cloud env"
@@ -34,7 +34,6 @@ install_gcp:
 	chmod +x /tmp/gcp_cli/google-cloud-sdk/install.sh
 	bash /tmp/gcp_cli/google-cloud-sdk/install.sh
 	/tmp/gcp_cli/google-cloud-sdk/bin/gcloud init
-	gcloud auth application-default login
 	
 install:
 	@$(PIP_BIN) install --upgrade pip
