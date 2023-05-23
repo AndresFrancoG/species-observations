@@ -18,8 +18,14 @@ bq_test:
 species_data:
   type: PartitionedDataSet
   path: "data//01_raw//species_bigQuery"
-  
   dataset:
     type: pandas.CSVDataSet
     load_args:
       sep: ","
+
+resampled_data:
+  type: pandas.CSVDataSet
+  filepath: "data//02_intermediate//species_bigQuery_resampled_obs.csv"
+  save_args:
+    sep: ","      
+    index: True
