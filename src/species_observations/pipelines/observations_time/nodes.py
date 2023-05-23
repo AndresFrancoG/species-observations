@@ -10,4 +10,5 @@ from species_observations.scripts.data_processing import Preprocessing
 def node_preprocessing_time_data(df: pd.DataFrame, parameters: Dict) -> pd.DataFrame:
     prep = Preprocessing(parameters)
     df = prep.preprocessing_time_data(df)
+    df = prep.time_resampling(df)
     return df

@@ -54,3 +54,6 @@ data_cols:
   last_interpreted: lastinterpreted
   media_type: mediatype
   issue: issue
+
+preprocessing:
+  resampling_period: 'D'  #'D' for daily.  'M' for monthly.  Uses pd.DataFrame.resample()
