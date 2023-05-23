@@ -3,3 +3,54 @@
 #
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.18.8/kedro_project_setup/configuration.html#parameters
+
+data_cols:
+  data_set_key: datasetkey
+  occurrence_id: occurrenceid
+  kindom: kingdom
+  phylum: phylum
+  class: class
+  order: order
+  family: family
+  genus: genus
+  species: species
+  infra_specific_epithet: infraspecificepithet
+  taxon_rank: taxonrank
+  scientific_name: scientificname
+  vervatim_scientific_name: verbatimscientificname
+  vervatim_scientific_name_authorship: verbatimscientificnameauthorship
+  country_code: countrycode
+  locality: locality
+  state_province: stateprovince
+  occurrence_status: occurrencestatus
+  individual_count: individualcount
+  publishing_org_key: publishingorgkey
+  decimal_latitude: decimallatitude
+  decimal_longitude: decimallongitude
+  coordinate_uncertainty_in_meters: coordinateuncertaintyinmeters
+  coordinate_precision: coordinateprecision
+  elevation: elevation
+  elevation_accuracy: elevationaccuracy
+  depth: depth
+  depth_accuracy: depthaccuracy
+  event_date: eventdate
+  date_day: day
+  date_month: month
+  date_year: year
+  taxon_key: taxonkey
+  species_key: specieskey
+  basis_of_record: basisofrecord
+  institution_code: institutioncode
+  collection_code: collectioncode
+  catalog_number: catalognumber
+  record_number: recordnumber
+  identified_by: identifiedby
+  date_identified: dateidentified
+  licence: license
+  rights_holder: rightsholder
+  recorder_by: recordedby
+  type_status: typestatus
+  establishment_means: establishmentmeans
+  last_interpreted: lastinterpreted
+  media_type: mediatype
+  issue: issue
