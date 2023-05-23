@@ -45,4 +45,4 @@ jobs:
         
     - name: Cleans up virtual environment
       run: |
-        make test_clean
+        make clean
