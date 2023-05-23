@@ -5,7 +5,13 @@
 
 species_data:
   type: pandas.CSVDataSet
-  path: data//01_raw//species_bigQuery_sample.csv
-  index_col: 'index'
+  filepath: data//01_raw//species_bigQuery_sample.csv
   load_args:
     sep: ","
+
+resampled_data:
+  type: pandas.CSVDataSet
+  filepath: data//02_intermediate//species_bigQuery_resampled_obs_sample.csv
+  save_args:
+    sep: ","      
+    index: True
