@@ -57,3 +57,7 @@ data_cols:
 
 preprocessing:
   resampling_period: 'D'  #'D' for daily.  'M' for monthly.  Uses pd.DataFrame.resample()
+  tests:
+    columns:
+      - individualcount
+    index_name: eventdate_datetime
