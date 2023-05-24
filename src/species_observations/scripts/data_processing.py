@@ -4,7 +4,7 @@ import species_observations.utils as utl
 from typing import Dict
 
 class Preprocessing:
-    def __init__(self, parameters: Dict):
+    def __init__(self, parameters: Dict, catalog_entry = 'preprocessing'):
         """Defines the parameters necessary for data preprocessing in the current project.
 
         Parameters
@@ -16,8 +16,11 @@ class Preprocessing:
         self._date_col = self._full_cols['event_date']
         self._count_col = self._full_cols['individual_count']
 
-        self._preproc_params = parameters['preprocessing']
+        self._preproc_params = parameters[catalog_entry]
         self._resample = self._preproc_params['resampling_period']
+        allowed_resamples = ['D', 'M']
+        if self._resample not in allowed_resamples:
+            raise ValueError(f"'resampling_period' can only take values of {allowed_resamples}. '{self._resample}' was given")
 
         self._datetime_suffix = '_datetime'
 
