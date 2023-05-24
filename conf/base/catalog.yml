@@ -37,3 +37,10 @@ test_species_data_partitioned:
     type: pandas.CSVDataSet
     load_args:
       sep: ","
+
+test_resampled_data:
+  type: pandas.CSVDataSet
+  filepath: data//02_intermediate//species_bigQuery_resampled_obs_sample.csv
+  save_args:
+    sep: ","      
+    index: True      
