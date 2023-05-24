@@ -1,39 +1,30 @@
+import os
 import pytest
+
 import pandas as pd
 import species_observations.utils as utl
 
-from typing import Tuple
-
-
-def load_PDS_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -> Tuple[str, ]:
-    """Loads info of the entry for testing from the kedro catalog.
+@pytest.mark.parametrize(
+        ('kedro_env', 'config_entry'),
+        [
+            ('test_cloud', 'preprocessing')
+    ])
+def test_load_PDS_from_catalog(kedro_env: str, config_entry: str):
+    """Test cases:
+        Path is a directory
+        dataset is not empty/None
 
     Parameters
     ----------
     kedro_env : str
         kedro environment to be used
-    config_entry : str, optional
-        Entry within the .yml parameters files which contains the information, by default 'preprocessing'
-        The entry name from the catalog is recovered from
-        config_entry:
-            tests:
-                partitioned_sample_catalog: CATALOG_ENTRY_NAME                   
-    Returns
-    -------
-    Tuple[str, ]
-        From the catalog entry, returns
-        path, dataset: type:  
+    config_entry : str
+        Entry from the parameters which contains the testing dataset info
     """
-    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    path, dataset = utl.load_PDS_from_catalog(kedro_env, config_entry)
     
-    test_info = config['parameters'][config_entry]['tests']
-    ds_catalog_name = test_info['partitioned_sample_catalog']    
-    dataset_info = config['catalog'][ds_catalog_name]
-
-    path = dataset_info['path']
-    dataset = dataset_info['dataset']['type']
-
-    return path, dataset
+    assert os.path.isdir(path)
+    assert type(dataset) is not None
 
 
 @pytest.mark.parametrize(
@@ -77,7 +68,7 @@ def test_load_partitionedDS_kedro(kedro_env: str, expected_type: type, expected_
     expected_item_type : type
         Expected type of individual items in the loaded partitioned dataset.
     """
-    path, dataset = load_PDS_from_catalog(kedro_env)
+    path, dataset = utl.load_PDS_from_catalog(kedro_env)
     ds_dict = utl.load_partitionedDS_kedro(path, dataset)
 
     assert type(ds_dict) == expected_type
@@ -102,7 +93,7 @@ def test_PartitionedDS2df(kedro_env: str, expected_type: type):
     expected_type : type
         Expected type of the loaded info.
     """    
-    path, dataset = load_PDS_from_catalog(kedro_env)
+    path, dataset = utl.load_PDS_from_catalog(kedro_env)
     ds_dict = utl.load_partitionedDS_kedro(path, dataset)
     df = utl.PartitionedDS2df(ds_dict)
     assert type(df) == expected_type
