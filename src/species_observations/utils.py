@@ -1,6 +1,8 @@
 import pandas as pd
 from typing import Dict
 from kedro.io import PartitionedDataSet
+from kedro.config import ConfigLoader
+from kedro.framework.project import settings
 
 
 def PartitionedDS2df(pd_dict: Dict) -> pd.DataFrame:
@@ -47,3 +49,21 @@ def load_partitionedDS_kedro(path: str, dataset: Dict) -> pd.DataFrame:
     print(dataset)
 
     return data_set.load()
+
+def load_config_file_kedro(kedro_env : str = 'base') -> Dict:
+    """Loads kedro's yml files in the config folder as dictionaries
+
+    Parameters
+    ----------
+    kedro_env : str, optional
+        Environment from which the config files will be loaded, by default 'base'
+
+    Returns
+    -------
+    Dict
+        Configuration info as dictionary.  
+            key 'catalog' returns the data catalog
+            key 'parameters' returns pipeline parameters
+    """
+    conf_path = str(settings.CONF_SOURCE)
+    return ConfigLoader(conf_source=conf_path, env=kedro_env)

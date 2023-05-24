@@ -3,6 +3,7 @@ import pandas as pd
 from kedro_datasets.pandas import CSVDataSet
 import species_observations.utils as utl
 
+
 def test_load_partitionedDS_kedro():
     path = "data//01_raw//species_bigQuery_sample"
     dataset = CSVDataSet
@@ -23,3 +24,11 @@ def test_PartitionedDS2df():
     assert type(df) == expected_type
     for k,v in ds_dict.items():
         assert (v().columns == df.columns).all()
+
+
+def test_load_config_file_kedro():
+    kedro_env = 'test_cloud'
+    expected_type = dict
+    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    assert type(config['catalog']) == expected_type
+    assert type(config['parameters']) == expected_type
