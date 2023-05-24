@@ -16,7 +16,7 @@ bq_test:
     reauth: True
 
 species_data:
-  type: 
+  type: PartitionedDataSet
   path: "data//01_raw//species_bigQuery"
   dataset:
     type: pandas.CSVDataSet
