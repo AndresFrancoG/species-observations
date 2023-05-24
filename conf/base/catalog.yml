@@ -29,3 +29,11 @@ resampled_data:
   save_args:
     sep: ","      
     index: True
+
+test_species_data_partitioned:
+  type: PartitionedDataSet
+  path: "data//01_raw//species_bigQuery_sample"
+  dataset:
+    type: pandas.CSVDataSet
+    load_args:
+      sep: ","

@@ -61,3 +61,5 @@ preprocessing:
     columns:
       - individualcount
     index_name: eventdate_datetime
+    # Name of the data catalog entry to use as source for unit tests of partitioned samples
+    partitioned_sample_catalog: test_species_data_partitioned  
