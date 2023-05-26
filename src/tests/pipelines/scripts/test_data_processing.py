@@ -10,15 +10,12 @@ import species_observations.scripts.data_processing as dtp
         [
             ('test_cloud', 'preprocessing')
     ])
-def test_preprocessing_class(kedro_env: str, catalog_entry: str):
+def test_preprocessing_class_attributes(kedro_env: str, catalog_entry: str):
     """Test that the list of data_columns and the necessary parameters for the 
         preprocessing class are defined in the configuration .yml
 
         Test cases:
             Attributes of Preprocessing() are of correct types 
-            columns defined in 'tests' entries of the .yml are in 'data_cols' and are strings
-            'resample_period' is in catalog_entry and are strings
-            'resample_period' is in ['D','M']
     Parameters
     ----------
     kedro_env : str
@@ -40,17 +37,62 @@ def test_preprocessing_class(kedro_env: str, catalog_entry: str):
     for _, value in name_types.items():
         assert isinstance(value['value'], value['type'])
 
-    assert 'data_cols' in parameters.keys()
 
+@pytest.mark.parametrize(
+        ('kedro_env', 'catalog_entry'),
+        [
+            ('test_cloud', 'preprocessing')
+    ])
+def test_preprocessing_class_data_cols(kedro_env: str, catalog_entry: str):
+    """Test that the list of data_columns and the necessary parameters for the 
+        preprocessing class are defined in the configuration .yml
+
+        Test cases:
+            columns defined in 'tests' entries of the .yml are in 'data_cols' and are strings
+    Parameters
+    ----------
+    kedro_env : str
+        kedro environment to be used
+    catalog_entry : str
+        Entry from the .yml configuration file in which additional parameters are stored
+    """
+    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    parameters = config['parameters']
+
+    assert 'data_cols' in parameters.keys()
     # List of columns of interest for the class
-    str_data_cols = parameters[catalog_entry]['tests']['columns']
-    index_name = parameters[catalog_entry]['tests']['index_col']
-    str_data_cols = str_data_cols + [index_name]
+    str_data_cols = (parameters[catalog_entry]['tests']['columns'] +
+        [parameters[catalog_entry]['tests']['index_col']]
+    )
     for data_column in str_data_cols:
         assert data_column in list(parameters['data_cols'].keys())
         assert isinstance(parameters['data_cols'][data_column], str)
 
-    assert 'preprocessing' in parameters.keys()
+    assert catalog_entry in parameters.keys()
+
+
+@pytest.mark.parametrize(
+        ('kedro_env', 'catalog_entry'),
+        [
+            ('test_cloud', 'preprocessing')
+    ])
+def test_preprocessing_class_resample_period(kedro_env: str, catalog_entry: str):
+    """Test that the list of data_columns and the necessary parameters for the 
+        preprocessing class are defined in the configuration .yml
+
+        Test cases:
+            'resample_period' is in catalog_entry and are strings
+            'resample_period' is in ['D','M']
+    Parameters
+    ----------
+    kedro_env : str
+        kedro environment to be used
+    catalog_entry : str
+        Entry from the .yml configuration file in which additional parameters are stored
+    """
+    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    parameters = config['parameters']
+    individual_restrictions = ['D','M']
 
     # Expected entries in the parameters along with expected types
     param_entries_types = {'resampling_period': str}
@@ -60,8 +102,7 @@ def test_preprocessing_class(kedro_env: str, catalog_entry: str):
         assert isinstance(parameters[catalog_entry][k], v)
 
     # Individual restrictions
-    assert parameters[catalog_entry]['resampling_period'] in ['D','M']
-
+    assert parameters[catalog_entry]['resampling_period'] in individual_restrictions
 # @pytest.mark.parametrize(
 #         ('kedro_env', 'data_type'),
 #         [
