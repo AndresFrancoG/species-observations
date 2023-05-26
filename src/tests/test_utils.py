@@ -2,8 +2,11 @@
 import os
 import pytest
 
+from typing import Dict
+
 import pandas as pd
 import species_observations.utils as utl
+import species_observations.scripts.data_processing as dtp
 
 
 @pytest.mark.parametrize(
@@ -101,3 +104,32 @@ def test_partitioned_ds_to_df(kedro_env: str, expected_type: type):
     assert isinstance(df_sample, expected_type)
     for _,value in ds_dict.items():
         assert (value().columns == df_sample.columns).all()
+
+
+@pytest.mark.parametrize(
+        ('kedro_env','attribute_list', 'type_mapping'),
+        [
+            ('test_cloud', {'_full_cols': 'dict'}, { 'dict': dict})
+    ])
+def test_attribute_names_types(kedro_env: str, attribute_list: Dict, type_mapping: Dict):
+    """Test cases:
+            All keys of returned dictionary are in the keys of type_mapping
+            All items of the returned dictionary have the keys 'value' and 'type'
+    Parameters
+    ----------
+    kedro_env : str
+        _description_
+    attribute_list : Dict
+        _description_
+    type_mapping : Dict
+        _description_
+    """
+    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    parameters = config['parameters']
+    prep = dtp.Preprocessing(parameters)
+    name_types = utl.attribute_names_types(attribute_list,
+                                           prep, type_mapping)
+    for key, value in name_types.items():
+        assert key in attribute_list.keys()
+        assert 'value' in list(value.keys())
+        assert 'type' in list(value.keys())
