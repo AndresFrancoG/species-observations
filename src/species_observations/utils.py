@@ -1,5 +1,5 @@
 """Helper functions for various actions"""
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Type
 import pandas as pd
 from kedro.io import PartitionedDataSet
 from kedro.config import ConfigLoader
@@ -103,3 +103,37 @@ def load_pds_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -
     dataset = dataset_info['dataset']['type']
 
     return path, dataset
+
+
+def attribute_names_types(member_variables: Dict, cls: Type, type_mapping: Dict) -> Dict:
+    """Using a dictionary of variable names and expected types as strings, recovers 
+    the attributes from the class cls with those variables names, and assigns the 
+    expected types in a format valid to be used for isinstance()
+
+    Parameters
+    ----------
+    member_variables : Dict
+        Contains a dictionary with the names of the attibutes and 
+        their expected types (as strings) 
+    cls : type
+        Class for which the attibutes will be checked
+    type_mapping : Dict
+        Allows to convert string expected types to standard 
+        expected typs
+
+    Returns
+    -------
+    Dict
+        Returns the values and expected types of the attributes
+        {'attribute_name': {
+                'value': attribute_value
+                'type': expected_type
+            }
+        }
+    """
+    names_types = {}
+    for key, value in member_variables.items():
+        var_value = getattr(cls, key)
+        names_types[key] = {'value': var_value,
+                            'type': type_mapping[value]}
+    return names_types

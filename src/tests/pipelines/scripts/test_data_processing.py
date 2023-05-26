@@ -31,15 +31,14 @@ def test_preprocessing_class(kedro_env: str, catalog_entry: str):
     prep = dtp.Preprocessing(parameters)
 
     # Checks if members of Preprocessing are correct types
-    member_variables = parameters[catalog_entry]['tests']['member_variables']
     type_mapping = {
         'str': str,
         'dict': dict,
     } # Add types as needed
-    for key, value in member_variables.items():
-        var_value = getattr(prep, key)
-        print(var_value, key)
-        assert isinstance(var_value, type_mapping[value])
+    name_types = utl.attribute_names_types(parameters[catalog_entry]['tests']['member_variables'],
+                                           prep, type_mapping)
+    for _, value in name_types.items():
+        assert isinstance(value['value'], value['type'])
 
     assert 'data_cols' in parameters.keys()
 
