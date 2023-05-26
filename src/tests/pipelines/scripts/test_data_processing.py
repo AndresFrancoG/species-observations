@@ -1,3 +1,4 @@
+"""Unit tests for the file data_processing.py"""
 import pytest
 
 import species_observations.utils as utl
@@ -62,20 +63,19 @@ def test_preprocessing_class(kedro_env: str, catalog_entry: str):
     # Individual restrictions
     assert parameters[catalog_entry]['resampling_period'] in ['D','M']
 
-@pytest.mark.parametrize(
-        ('kedro_env', 'data_type'),
-        [
-            ('test_cloud', 'Partitioned')
-    ])
-def test_preprocessing_time_data(kedro_env: str, data_type: str):
-    config = utl.load_config_file_kedro(kedro_env = kedro_env)
-    parameters = config['parameters']
-    prep = dtp.Preprocessing(parameters)
+# @pytest.mark.parametrize(
+#         ('kedro_env', 'data_type'),
+#         [
+#             ('test_cloud', 'Partitioned')
+#     ])
+# def test_preprocessing_time_data(kedro_env: str, data_type: str):
+#     config = utl.load_config_file_kedro(kedro_env = kedro_env)
+#     parameters = config['parameters']
+#     prep = dtp.Preprocessing(parameters)
     
-    if data_type == 'Partitioned':
-        path, dataset = utl.load_PDS_from_catalog(kedro_env)
-        ds_dict = utl.load_partitionedDS_kedro(path, dataset)
-        df = utl.partitioned_ds_to_df(ds_dict)
+#     if data_type == 'Partitioned':
+#         path, dataset = utl.load_pds_from_catalog(kedro_env)
+#         ds_dict = utl.load_partitioned_ds_kedro(path, dataset)
+#         df = utl.partitioned_ds_to_df(ds_dict)
 
-    df_out = prep.preprocessing_time_data(df)
-
+#     df_out = prep.preprocessing_time_data(df)

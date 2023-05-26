@@ -28,7 +28,7 @@ def partitioned_ds_to_df(pd_dict: Dict) -> pd.DataFrame:
     return df_joined
 
 
-def load_partitionedDS_kedro(path: str, dataset: Dict) -> pd.DataFrame:
+def load_partitioned_ds_kedro(path: str, dataset: Dict) -> pd.DataFrame:
     """Loads a partitioned data stored in the folder specified in path.
 
     Parameters
@@ -36,7 +36,8 @@ def load_partitionedDS_kedro(path: str, dataset: Dict) -> pd.DataFrame:
     path : str
         Folder of the partitioned data
     dataset : Dict
-        Type of data to search for and load options (dataset option in kedro's catalog of type PartitionedDataSet)
+        Type of data to search for and load options 
+        (dataset option in kedro's catalog of type PartitionedDataSet)
 
     Returns
     -------
@@ -72,7 +73,7 @@ def load_config_file_kedro(kedro_env : str = 'base') -> Dict:
     return ConfigLoader(conf_source=conf_path, env=kedro_env)
 
 
-def load_PDS_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -> Tuple[str, ]:
+def load_pds_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -> Tuple[str, ]:
     """Loads info of the entry for testing from the kedro catalog.
 
     Parameters
@@ -80,7 +81,8 @@ def load_PDS_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -
     kedro_env : str
         kedro environment to be used
     config_entry : str, optional
-        Entry within the .yml parameters files which contains the information, by default 'preprocessing'
+        Entry within the .yml parameters files which contains the information, 
+            by default 'preprocessing'
         The entry name from the catalog is recovered from
         config_entry:
             tests:
@@ -94,7 +96,7 @@ def load_PDS_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -
     config = load_config_file_kedro(kedro_env = kedro_env)
     
     test_info = config['parameters'][config_entry]['tests']
-    ds_catalog_name = test_info['partitioned_sample_catalog']    
+    ds_catalog_name = test_info['partitioned_sample_catalog']
     dataset_info = config['catalog'][ds_catalog_name]
 
     path = dataset_info['path']
