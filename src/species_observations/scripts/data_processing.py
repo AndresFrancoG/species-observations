@@ -46,7 +46,7 @@ class Preprocessing:
         count_col = self._count_col
 
         if type(df) == dict:
-            df = utl.PartitionedDS2df(df)
+            df = utl.partitioned_ds_to_df(df)
 
         df[date_col_datetime] = pd.to_datetime(df[date_col])
         df[count_col] = df[count_col].fillna(0)

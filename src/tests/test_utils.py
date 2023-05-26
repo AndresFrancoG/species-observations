@@ -80,7 +80,7 @@ def test_load_partitionedDS_kedro(kedro_env: str, expected_type: type, expected_
         [
             ('test_cloud', pd.DataFrame)
     ])
-def test_PartitionedDS2df(kedro_env: str, expected_type: type):
+def test_partitioned_ds_to_df(kedro_env: str, expected_type: type):
     """Test cases:
         Data is loaded as the expected type. Typically pd.DataFrame
         The columns of each entry of the loaded partitioned dataset
@@ -95,7 +95,7 @@ def test_PartitionedDS2df(kedro_env: str, expected_type: type):
     """    
     path, dataset = utl.load_PDS_from_catalog(kedro_env)
     ds_dict = utl.load_partitionedDS_kedro(path, dataset)
-    df = utl.PartitionedDS2df(ds_dict)
+    df = utl.partitioned_ds_to_df(ds_dict)
     assert type(df) == expected_type
     for k,v in ds_dict.items():
         assert (v().columns == df.columns).all()

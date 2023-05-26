@@ -9,12 +9,13 @@ import species_observations.scripts.data_processing as dtp
         [
             ('test_cloud', 'preprocessing')
     ])
-def test_Preprocessing_class(kedro_env: str, catalog_entry: str):
+def test_preprocessing_class(kedro_env: str, catalog_entry: str):
     """Test that the list of data_columns and the necessary parameters for the 
         preprocessing class are defined in the configuration .yml
 
         Test cases:
-            'event_date' and 'individual_count' are in 'data_cols' and are strings
+            Attributes of Preprocessing() are of correct types 
+            columns defined in 'tests' entries of the .yml are in 'data_cols' and are strings
             'resample_period' is in catalog_entry and are strings
             'resample_period' is in ['D','M']
     Parameters
@@ -28,13 +29,26 @@ def test_Preprocessing_class(kedro_env: str, catalog_entry: str):
     parameters = config['parameters']
     prep = dtp.Preprocessing(parameters)
 
+    # Checks if members of Preprocessing are correct types
+    member_variables = parameters[catalog_entry]['tests']['member_variables']
+    type_mapping = {
+        'str': str,
+        'dict': dict,
+    } # Add types as needed
+    for key, value in member_variables.items():
+        var_value = getattr(prep, key)
+        print(var_value, key)
+        assert isinstance(var_value, type_mapping[value])
+
     assert 'data_cols' in parameters.keys()
 
     # List of columns of interest for the class
-    str_data_cols = ['event_date', 'individual_count']
-    for dc in str_data_cols:
-        assert dc in parameters['data_cols'].keys()
-        assert type(parameters['data_cols'][dc]) == str
+    str_data_cols = parameters[catalog_entry]['tests']['columns']
+    index_name = parameters[catalog_entry]['tests']['index_col']
+    str_data_cols = str_data_cols + [index_name]
+    for data_column in str_data_cols:
+        assert data_column in list(parameters['data_cols'].keys())
+        assert isinstance(parameters['data_cols'][data_column], str)
 
     assert 'preprocessing' in parameters.keys()
 
@@ -43,27 +57,25 @@ def test_Preprocessing_class(kedro_env: str, catalog_entry: str):
 
     for k,v in param_entries_types.items():
         assert k in parameters[catalog_entry].keys()
-        assert type(parameters[catalog_entry][k]) == v
+        assert isinstance(parameters[catalog_entry][k], v)
 
     # Individual restrictions
     assert parameters[catalog_entry]['resampling_period'] in ['D','M']
 
-# @pytest.mark.parametrize(
-#         ('kedro_env', 'data_type'),
-#         [
-#             ('test_cloud', 'Partitioned')
-#     ])
-# def test_preprocessing_time_data(kedro_env: str, data_type: str):
-#     config = utl.load_config_file_kedro(kedro_env = kedro_env)
-#     parameters = config['parameters']
-#     prep = dtp.Preprocessing(parameters)
+@pytest.mark.parametrize(
+        ('kedro_env', 'data_type'),
+        [
+            ('test_cloud', 'Partitioned')
+    ])
+def test_preprocessing_time_data(kedro_env: str, data_type: str):
+    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    parameters = config['parameters']
+    prep = dtp.Preprocessing(parameters)
     
-#     if data_type == 'Partitioned':
-#         path, dataset = utl.load_PDS_from_catalog(kedro_env)
-#         ds_dict = utl.load_partitionedDS_kedro(path, dataset)
-#         df = utl.PartitionedDS2df(ds_dict)
+    if data_type == 'Partitioned':
+        path, dataset = utl.load_PDS_from_catalog(kedro_env)
+        ds_dict = utl.load_partitionedDS_kedro(path, dataset)
+        df = utl.partitioned_ds_to_df(ds_dict)
 
-#     df_out = prep.preprocessing_time_data(df)
+    df_out = prep.preprocessing_time_data(df)
 
-#     assert 'data_cols' in parameters.keys()
-#     assert type(dataset) is not None

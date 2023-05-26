@@ -1,12 +1,13 @@
-import pandas as pd
+"""Helper functions for various actions"""
 from typing import Dict, Tuple
+import pandas as pd
 from kedro.io import PartitionedDataSet
 from kedro.config import ConfigLoader
 from kedro.framework.project import settings
 
 
-def PartitionedDS2df(pd_dict: Dict) -> pd.DataFrame:
-    """Converts data loaded with PartitionedDataSet into a single pandas datafra,e
+def partitioned_ds_to_df(pd_dict: Dict) -> pd.DataFrame:
+    """Converts data loaded with PartitionedDataSet into a single pandas dataframe
 
     Parameters
     ----------
@@ -18,13 +19,13 @@ def PartitionedDS2df(pd_dict: Dict) -> pd.DataFrame:
     pd.DataFrame
         Single dataframe with all data
     """
-    df = pd.DataFrame()
-    for partition_id, partition_load_func in pd_dict.items():
+    df_joined = pd.DataFrame()
+    for _, partition_load_func in pd_dict.items():
         partition_data = partition_load_func()
-        df = pd.concat(
-            [df, partition_data], ignore_index=True, sort=True
+        df_joined = pd.concat(
+            [df_joined, partition_data], ignore_index=True, sort=True
         )
-    return df
+    return df_joined
 
 
 def load_partitionedDS_kedro(path: str, dataset: Dict) -> pd.DataFrame:
