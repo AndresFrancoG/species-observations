@@ -94,7 +94,7 @@ def load_pds_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -
         path, dataset: type:  
     """
     config = load_config_file_kedro(kedro_env = kedro_env)
-    
+
     test_info = config['parameters'][config_entry]['tests']
     ds_catalog_name = test_info['partitioned_sample_catalog']
     dataset_info = config['catalog'][ds_catalog_name]
@@ -103,6 +103,36 @@ def load_pds_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -
     dataset = dataset_info['dataset']['type']
 
     return path, dataset
+
+
+def load_csv_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -> Tuple[str, ]:
+    """Loads info of the entry for testing from the kedro catalog.
+
+    Parameters
+    ----------
+    kedro_env : str
+        kedro environment to be used
+    config_entry : str, optional
+        Entry within the .yml parameters files which contains the information, 
+            by default 'preprocessing'
+        The entry name from the catalog is recovered from
+        config_entry:
+            tests:
+                csv_sample_catalog: CATALOG_ENTRY_NAME                   
+    Returns
+    -------
+    Tuple[str, ]
+        From the catalog entry, returns
+        path, dataset: type:  
+    """
+    config = load_config_file_kedro(kedro_env = kedro_env)
+
+    test_info = config['parameters'][config_entry]['tests']
+    ds_catalog_name = test_info['csv_sample_catalog']
+    dataset_info = config['catalog'][ds_catalog_name]
+
+    path = dataset_info['filepath']
+    return path
 
 
 def attribute_names_types(member_variables: Dict, cls: Type, type_mapping: Dict) -> Dict:

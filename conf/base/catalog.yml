@@ -25,22 +25,29 @@ species_data:
 
 resampled_data:
   type: pandas.CSVDataSet
-  filepath: "data//02_intermediate//species_bigQuery_resampled_obs.csv"
+  filepath: data//02_intermediate//species_bigQuery_resampled_obs.csv
   save_args:
     sep: ","      
     index: True
 
 test_species_data_partitioned:
   type: PartitionedDataSet
-  path: "data//01_raw//species_bigQuery_sample"
+  path: data//01_raw//species_bigQuery_sample
   dataset:
     type: pandas.CSVDataSet
     load_args:
       sep: ","
+
+test_species_data_csv:
+  type: pandas.CSVDataSet
+  filepath: data//01_raw//species_bigQuery_sample.csv
+  save_args:
+    sep: ","      
+    index: True
 
 test_resampled_data:
   type: pandas.CSVDataSet
   filepath: data//02_intermediate//species_bigQuery_resampled_obs_sample.csv
   save_args:
     sep: ","      
-    index: True      
+    index: True

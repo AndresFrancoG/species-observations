@@ -1,8 +1,7 @@
 """Unit tests for the file utils.py"""
+from typing import Dict
 import os
 import pytest
-
-from typing import Dict
 
 import pandas as pd
 import species_observations.utils as utl

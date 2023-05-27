@@ -3,6 +3,8 @@ import pytest
 
 import species_observations.utils as utl
 import species_observations.scripts.data_processing as dtp
+from pandas.api.types import is_datetime64_any_dtype as is_datetime
+from kedro_datasets.pandas import CSVDataSet
 
 
 @pytest.mark.parametrize(
@@ -21,7 +23,7 @@ def test_preprocessing_class_attributes(kedro_env: str, catalog_entry: str):
     kedro_env : str
         kedro environment to be used
     catalog_entry : str
-        Entry from the .yml configuration file in which additional parameters are stored
+        Entry from the .yml configuration file associated to the kedro pipeline
     """
     config = utl.load_config_file_kedro(kedro_env = kedro_env)
     parameters = config['parameters']
@@ -54,7 +56,7 @@ def test_preprocessing_class_data_cols(kedro_env: str, catalog_entry: str):
     kedro_env : str
         kedro environment to be used
     catalog_entry : str
-        Entry from the .yml configuration file in which additional parameters are stored
+        Entry from the .yml configuration file associated to the kedro pipeline
     """
     config = utl.load_config_file_kedro(kedro_env = kedro_env)
     parameters = config['parameters']
@@ -77,10 +79,7 @@ def test_preprocessing_class_data_cols(kedro_env: str, catalog_entry: str):
             ('test_cloud', 'preprocessing')
     ])
 def test_preprocessing_class_resample_period(kedro_env: str, catalog_entry: str):
-    """Test that the list of data_columns and the necessary parameters for the 
-        preprocessing class are defined in the configuration .yml
-
-        Test cases:
+    """Test cases:
             'resample_period' is in catalog_entry and are strings
             'resample_period' is in ['D','M']
     Parameters
@@ -88,7 +87,7 @@ def test_preprocessing_class_resample_period(kedro_env: str, catalog_entry: str)
     kedro_env : str
         kedro environment to be used
     catalog_entry : str
-        Entry from the .yml configuration file in which additional parameters are stored
+        Entry from the .yml configuration file associated to the kedro pipeline
     """
     config = utl.load_config_file_kedro(kedro_env = kedro_env)
     parameters = config['parameters']
@@ -103,19 +102,46 @@ def test_preprocessing_class_resample_period(kedro_env: str, catalog_entry: str)
 
     # Individual restrictions
     assert parameters[catalog_entry]['resampling_period'] in individual_restrictions
-# @pytest.mark.parametrize(
-#         ('kedro_env', 'data_type'),
-#         [
-#             ('test_cloud', 'Partitioned')
-#     ])
-# def test_preprocessing_time_data(kedro_env: str, data_type: str):
-#     config = utl.load_config_file_kedro(kedro_env = kedro_env)
-#     parameters = config['parameters']
-#     prep = dtp.Preprocessing(parameters)
-    
-#     if data_type == 'Partitioned':
-#         path, dataset = utl.load_pds_from_catalog(kedro_env)
-#         ds_dict = utl.load_partitioned_ds_kedro(path, dataset)
-#         df = utl.partitioned_ds_to_df(ds_dict)
 
-#     df_out = prep.preprocessing_time_data(df)
+
+@pytest.mark.parametrize(
+        ('kedro_env',  'catalog_entry', 'data_type'),
+        [
+            ('test_cloud', 'preprocessing', 'Partitioned'),
+            ('test_cloud', 'preprocessing', 'CSV')
+    ])
+def test_preprocessing_time_data(kedro_env: str, catalog_entry: str, data_type: str):
+    """Test cases:
+            Output dataframe has no NaN
+            The column eventdate_datetime exists and is of type datetime
+    Parameters
+    ----------
+    kedro_env : str
+        kedro environment to be used
+    catalog_entry : str
+        Entry from the .yml configuration file associated to the kedro pipeline
+    data_type : str
+        What kind of data is used as source
+            'Partitioned': Partitioned dataset entry from the data catalog.
+                Defined in catalog_entry as partitioned_sample_catalog
+            'CSV': CSVPandasDS entry from the data catalog.
+                Defined in catalog_entry as csv_sample_catalog                
+
+    """
+    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    parameters = config['parameters']
+    prep = dtp.Preprocessing(parameters)
+
+    if data_type == 'Partitioned':
+        path, dataset = utl.load_pds_from_catalog(kedro_env, config_entry=catalog_entry)
+        ds_dict = utl.load_partitioned_ds_kedro(path, dataset)
+        df_sample = utl.partitioned_ds_to_df(ds_dict)
+    elif data_type == 'CSV':
+        path = utl.load_csv_from_catalog(kedro_env, config_entry=catalog_entry)
+        data_set = CSVDataSet(filepath=path)
+        df_sample = data_set.load()
+        print(df_sample.columns)
+
+    df_out = prep.preprocessing_time_data(df_sample)
+    assert df_out.isna().sum().sum() == 0
+    assert is_datetime(df_out[prep.get_date_col() + prep.get_datetime_suffix()])
