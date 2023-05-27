@@ -105,7 +105,7 @@ def load_pds_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -
     return path, dataset
 
 
-def load_csv_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -> Tuple[str, ]:
+def load_csv_from_catalog(kedro_env: str, config_entry: str = 'preprocessing', entry_name = 'csv_sample_catalog') -> Tuple[str, ]:
     """Loads info of the entry for testing from the kedro catalog.
 
     Parameters
@@ -115,10 +115,14 @@ def load_csv_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -
     config_entry : str, optional
         Entry within the .yml parameters files which contains the information, 
             by default 'preprocessing'
-        The entry name from the catalog is recovered from
-        config_entry:
-            tests:
-                csv_sample_catalog: CATALOG_ENTRY_NAME                   
+    entry_name :  str, optional
+        Entry within the .yml parameter files which contains the information
+            by default 'csv_sample_catalog'
+
+    The entry name from the catalog is recovered from
+    config_entry:
+        tests:
+            entry_name: CATALOG_ENTRY_NAME    
     Returns
     -------
     Tuple[str, ]
@@ -128,7 +132,7 @@ def load_csv_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -
     config = load_config_file_kedro(kedro_env = kedro_env)
 
     test_info = config['parameters'][config_entry]['tests']
-    ds_catalog_name = test_info['csv_sample_catalog']
+    ds_catalog_name = test_info[entry_name]
     dataset_info = config['catalog'][ds_catalog_name]
 
     path = dataset_info['filepath']

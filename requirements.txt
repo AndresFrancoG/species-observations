@@ -13,3 +13,4 @@ black==23.3.0
 nbconvert==7.4.0
 matplotlib==3.7.1
 pylint==2.17.4
+MonthDelta==0.9.1

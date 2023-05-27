@@ -45,6 +45,13 @@ test_species_data_csv:
     sep: ","      
     index: True
 
+test_species_data_csv_prep_s01:
+  type: pandas.CSVDataSet
+  filepath: data//01_raw//species_bigQuery_sample_preprocessed_S01.csv
+  save_args:
+    sep: ","      
+    index: True
+
 test_resampled_data:
   type: pandas.CSVDataSet
   filepath: data//02_intermediate//species_bigQuery_resampled_obs_sample.csv

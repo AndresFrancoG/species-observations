@@ -64,6 +64,7 @@ preprocessing:
     # Name of the data catalog entry to use as source for unit tests of partitioned samples
     partitioned_sample_catalog: test_species_data_partitioned
     csv_sample_catalog: test_species_data_csv
+    csv_sample_catalog_preprocessed_stage_01: test_species_data_csv_prep_s01
     member_variables:
       _full_cols: dict
       _date_col: str

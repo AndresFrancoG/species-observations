@@ -1,10 +1,12 @@
 """Unit tests for the file data_processing.py"""
 import pytest
+from pandas.api.types import is_datetime64_any_dtype as is_datetime
+from kedro_datasets.pandas import CSVDataSet
+from monthdelta import monthdelta
 
 import species_observations.utils as utl
 import species_observations.scripts.data_processing as dtp
-from pandas.api.types import is_datetime64_any_dtype as is_datetime
-from kedro_datasets.pandas import CSVDataSet
+
 
 
 @pytest.mark.parametrize(
@@ -140,8 +142,117 @@ def test_preprocessing_time_data(kedro_env: str, catalog_entry: str, data_type: 
         path = utl.load_csv_from_catalog(kedro_env, config_entry=catalog_entry)
         data_set = CSVDataSet(filepath=path)
         df_sample = data_set.load()
-        print(df_sample.columns)
 
     df_out = prep.preprocessing_time_data(df_sample)
     assert df_out.isna().sum().sum() == 0
     assert is_datetime(df_out[prep.get_date_col() + prep.get_datetime_suffix()])
+
+
+@pytest.mark.parametrize(
+        ('kedro_env',  'catalog_entry'),
+        [
+            ('test_cloud', 'preprocessing')
+    ])
+def test_time_resampling_index(kedro_env: str, catalog_entry: str):
+    """Test cases:
+            Index is datetime
+    Parameters
+    ----------
+    kedro_env : str
+        kedro environment to be used
+    catalog_entry : str
+        Entry from the .yml configuration file associated to the kedro pipeline
+        The CSV to be used as test data is specified in catalog_entry 
+        as tests -> csv_sample_catalog
+    """
+    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    parameters = config['parameters']
+    prep = dtp.Preprocessing(parameters)
+
+    path = utl.load_csv_from_catalog(kedro_env,
+        config_entry=catalog_entry, entry_name='csv_sample_catalog_preprocessed_stage_01'
+        )
+    data_set = CSVDataSet(filepath=path)
+    df_sample = data_set.load()
+
+    # Index is datetime?
+    df_out = prep.time_resampling(df_sample)
+    assert is_datetime(df_out.index)
+
+
+@pytest.mark.parametrize(
+        ('kedro_env',  'catalog_entry', 'resample'),
+        [
+            ('test_cloud', 'preprocessing', 'D'),
+            ('test_cloud', 'preprocessing', 'M')
+    ])
+def test_time_resampling_diff(kedro_env: str, catalog_entry: str, resample: str):
+    """Test cases:
+            Minimum time difference resampling is appropriate with the 
+            expected resampling
+    Parameters
+    ----------
+    kedro_env : str
+        kedro environment to be used
+    catalog_entry : str
+        Entry from the .yml configuration file associated to the kedro pipeline
+        The CSV to be used as test data is specified in catalog_entry 
+        as tests -> csv_sample_catalog
+    resample : str
+        Resample period. 'D' -> Daily.  'M' -> Montly
+    """
+    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    parameters = config['parameters']
+    prep = dtp.Preprocessing(parameters)
+
+    path = utl.load_csv_from_catalog(kedro_env,
+        config_entry=catalog_entry, entry_name='csv_sample_catalog_preprocessed_stage_01'
+        )
+    data_set = CSVDataSet(filepath=path)
+    df_sample = data_set.load()
+
+    # Index is datetime?
+    df_out = prep.time_resampling(df_sample, resample=resample)
+
+    # Minimum difference is equal to the expected resampling
+    resample = prep.get_resample()
+    if resample == 'D':
+        min_time_diff = df_out.index.to_series().diff().min().total_seconds() / (3600*24)
+    elif resample == 'M':
+        min_time_diff = df_out.index.to_series().diff().min() / monthdelta(1)      
+    assert min_time_diff >= 1
+
+
+@pytest.mark.parametrize(
+        ('kedro_env',  'catalog_entry', 'resample'),
+        [
+            ('test_cloud', 'preprocessing', 'X'),
+            ('test_cloud', 'preprocessing', 'Y')
+    ])
+def test_time_resampling_val_error(kedro_env: str, catalog_entry: str, resample: str):
+    """Test cases:
+            Raises error when resample is not valid
+    Parameters
+    ----------
+    kedro_env : str
+        kedro environment to be used
+    catalog_entry : str
+        Entry from the .yml configuration file associated to the kedro pipeline
+        The CSV to be used as test data is specified in catalog_entry 
+        as tests -> csv_sample_catalog
+    resample : str
+        Resample period. Should not be in the list Preprocessing()._allowed_resamples
+    """
+    config = utl.load_config_file_kedro(kedro_env = kedro_env)
+    parameters = config['parameters']
+    prep = dtp.Preprocessing(parameters)
+
+    path = utl.load_csv_from_catalog(kedro_env,
+        config_entry=catalog_entry, entry_name='csv_sample_catalog_preprocessed_stage_01'
+        )
+    data_set = CSVDataSet(filepath=path)
+    df_sample = data_set.load()
+
+    # Index is datetime?
+    with pytest.raises(ValueError):
+        df_out = prep.time_resampling(df_sample, resample=resample)
