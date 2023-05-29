@@ -132,3 +132,37 @@ def test_attribute_names_types(kedro_env: str, attribute_list: Dict, type_mappin
         assert key in attribute_list.keys()
         assert 'value' in list(value.keys())
         assert 'type' in list(value.keys())
+
+
+@pytest.mark.parametrize(
+        ('filepath'),
+        [
+            ('data//01_raw//species_bigQuery_sample.csv')
+    ])
+def test_load_csv_from_filepath_type(filepath):
+    """Test cases:
+            Output is of type pd.DataFrame           
+    Parameters
+    ----------
+    filepath : str
+        Location of csv
+    """    
+    df_sample = utl.load_csv_from_filepath(filepath)
+    assert isinstance(df_sample, pd.DataFrame)
+
+
+@pytest.mark.parametrize(
+        ('filepath'),
+        [
+            ('species-observations//data//01_raw//species_bigQuery_sample.csv')
+    ])
+def test_load_csv_from_filepath_error(filepath):
+    """Test cases:
+            Exception on invalid path
+    Parameters
+    ----------
+    filepath : str
+        Invalid path
+    """      
+    with pytest.raises(Exception):
+        utl.load_csv_from_filepath(filepath)
