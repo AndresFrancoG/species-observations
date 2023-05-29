@@ -38,7 +38,11 @@ jobs:
       with:
         service_account_key: ${{ secrets.GOOGLE_AUTH }}
         project_id: bigqueryspecies
-        
+
+    - name: Linting
+      run: |
+        make lint
+
     - name: Run tests
       run: |
         make test_cloud
