@@ -4,6 +4,8 @@ import os
 import pytest
 
 import pandas as pd
+from kedro_datasets.pandas import CSVDataSet
+
 import species_observations.utils as utl
 import species_observations.scripts.data_processing as dtp
 
@@ -151,3 +153,45 @@ def test_load_csv_from_filepath_error(filepath):
     """
     with pytest.raises(Exception):
         utl.load_csv_from_filepath(filepath)
+
+
+@pytest.mark.parametrize(
+    ("data_type", "path"),
+    [
+        ("CSV", "data//01_raw//species_bigQuery_sample.csv"),
+        (
+            "Partitioned",
+            "data//01_raw//species_bigQuery_sample//",
+        ),
+    ],
+)
+def test_validates_dataframe(data_type: str, path: str):
+    """Test cases:
+            Output type is pd.DataFrame
+    Parameters
+    ----------
+    data_type : str
+        What kind of data is used as source
+            'Partitioned': Partitioned dataset, expecting CSVDataSet
+            'CSV': .csv
+    filepath : str
+        Location of csv or folder with multiple .csv
+    """
+    if data_type == "Partitioned":
+        df_sample = utl.load_partitioned_ds_kedro(path, CSVDataSet)
+    elif data_type == "CSV":
+        df_sample = utl.load_csv_from_filepath(path)
+
+    df_out = utl.validates_dataframe(df_sample)
+    assert isinstance(df_out, pd.DataFrame)
+
+
+@pytest.mark.parametrize(
+    ("input_data"),
+    [
+        (1.0),
+    ],
+)
+def test_validates_dataframe_type(input_data: object):
+    with pytest.raises(ValueError):
+        utl.validates_dataframe(input_data)

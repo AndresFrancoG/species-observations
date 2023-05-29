@@ -189,3 +189,23 @@ def load_csv_from_filepath(filepath) -> pd.DataFrame:
     """
     data_set = CSVDataSet(filepath=filepath)
     return data_set.load()
+
+
+def validates_dataframe(df_in: pd.DataFrame) -> pd.DataFrame:
+    """If df_in is a dict loaded from a partitioned DS, converts it to pd.DataFrame
+
+    Parameters
+    ----------
+    df_in : pd.DataFrame
+        _description_
+
+    Returns
+    -------
+    pd.DataFrame
+        _description_
+    """
+    if isinstance(df_in, dict):
+        df_in = partitioned_ds_to_df(df_in)
+    if not isinstance(df_in, pd.DataFrame):
+        raise ValueError("Invalid Input data")
+    return df_in

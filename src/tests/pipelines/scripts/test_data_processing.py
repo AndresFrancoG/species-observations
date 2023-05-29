@@ -1,7 +1,6 @@
 """Unit tests for the file data_processing.py"""
 import pytest
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
-from kedro_datasets.pandas import CSVDataSet
 from monthdelta import monthdelta
 
 import species_observations.utils as utl
@@ -38,6 +37,31 @@ def test_preprocessing_class_attributes(kedro_env: str, catalog_entry: str):
     )
     for _, value in name_types.items():
         assert isinstance(value["value"], value["type"])
+
+
+@pytest.mark.parametrize(
+    ("kedro_env", "catalog_entry", "invalid_resample"),
+    [("test_cloud", "preprocessing", "X")],
+)
+def test_preprocessing_class_resample_error(
+    kedro_env: str, catalog_entry: str, invalid_resample: str
+):
+    """Test cases:
+            Raises ValueError if resample is not valid as defined by self._allowed_resamples
+    Parameters
+    ----------
+    kedro_env : str
+        kedro environment to be used
+    catalog_entry : str
+        Entry from the .yml configuration file associated to the kedro pipeline
+    Invalid_resample : str
+        Invalid value of resample to be used
+    """
+    config = utl.load_config_file_kedro(kedro_env=kedro_env)
+    parameters = config["parameters"]
+    parameters[catalog_entry]["resampling_period"] = invalid_resample
+    with pytest.raises(ValueError):
+        dtp.Preprocessing(parameters)
 
 
 @pytest.mark.parametrize(

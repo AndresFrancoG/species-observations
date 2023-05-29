@@ -85,8 +85,7 @@ class Preprocessing:
         date_col_datetime = date_col + self._datetime_suffix
         count_col = self._count_col
 
-        if isinstance(df_in, dict):
-            df_in = utl.partitioned_ds_to_df(df_in)
+        df_in = utl.validates_dataframe(df_in)
 
         df_in[date_col_datetime] = pd.to_datetime(df_in[date_col])
         df_in[count_col] = df_in[count_col].fillna(0)
