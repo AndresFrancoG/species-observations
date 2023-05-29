@@ -35,7 +35,7 @@ def node_preprocessing_time_data_type(kedro_env: str, catalog_entry: str):
 @pytest.mark.parametrize(
     ("kedro_env", "catalog_entry"), [("test_cloud", "preprocessing")]
 )
-def node_preprocessing_time_data_NaN(kedro_env: str, catalog_entry: str):
+def node_preprocessing_time_data_nan(kedro_env: str, catalog_entry: str):
     """Test cases:
         Output has no NaN
 
