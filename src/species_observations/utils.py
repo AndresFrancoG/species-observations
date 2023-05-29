@@ -2,6 +2,7 @@
 from typing import Dict, Tuple, Type
 import pandas as pd
 from kedro.io import PartitionedDataSet
+from kedro_datasets.pandas import CSVDataSet
 from kedro.config import ConfigLoader
 from kedro.framework.project import settings
 
@@ -105,7 +106,9 @@ def load_pds_from_catalog(kedro_env: str, config_entry: str = 'preprocessing') -
     return path, dataset
 
 
-def load_csv_from_catalog(kedro_env: str, config_entry: str = 'preprocessing', entry_name = 'csv_sample_catalog') -> Tuple[str, ]:
+def load_csv_from_catalog(
+        kedro_env: str, config_entry: str = 'preprocessing',
+        entry_name = 'csv_sample_catalog') -> str:
     """Loads info of the entry for testing from the kedro catalog.
 
     Parameters
@@ -125,18 +128,16 @@ def load_csv_from_catalog(kedro_env: str, config_entry: str = 'preprocessing', e
             entry_name: CATALOG_ENTRY_NAME    
     Returns
     -------
-    Tuple[str, ]
-        From the catalog entry, returns
-        path, dataset: type:  
+    str
+        From the catalog entry, returns filepath
     """
     config = load_config_file_kedro(kedro_env = kedro_env)
 
     test_info = config['parameters'][config_entry]['tests']
     ds_catalog_name = test_info[entry_name]
     dataset_info = config['catalog'][ds_catalog_name]
-
-    path = dataset_info['filepath']
-    return path
+    filepath = dataset_info['filepath']   
+    return load_csv_from_filepath(filepath)
 
 
 def attribute_names_types(member_variables: Dict, cls: Type, type_mapping: Dict) -> Dict:
@@ -171,3 +172,19 @@ def attribute_names_types(member_variables: Dict, cls: Type, type_mapping: Dict)
         names_types[key] = {'value': var_value,
                             'type': type_mapping[value]}
     return names_types
+
+
+def load_csv_from_filepath(filepath) -> pd.DataFrame:
+    """Loads CSV as pandas dataframe using kedro Python API
+
+    Parameters
+    ----------
+    filepath : str
+        path to the csv file. Relative to the kedro project main folder
+    Returns
+    -------
+    pd.DataFrame
+        Loaded datafram
+    """
+    data_set = CSVDataSet(filepath=filepath)
+    return data_set.load()

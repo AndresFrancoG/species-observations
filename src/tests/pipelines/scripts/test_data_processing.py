@@ -139,9 +139,7 @@ def test_preprocessing_time_data(kedro_env: str, catalog_entry: str, data_type: 
         ds_dict = utl.load_partitioned_ds_kedro(path, dataset)
         df_sample = utl.partitioned_ds_to_df(ds_dict)
     elif data_type == 'CSV':
-        path = utl.load_csv_from_catalog(kedro_env, config_entry=catalog_entry)
-        data_set = CSVDataSet(filepath=path)
-        df_sample = data_set.load()
+        df_sample = utl.load_csv_from_catalog(kedro_env, config_entry=catalog_entry)
 
     df_out = prep.preprocessing_time_data(df_sample)
     assert df_out.isna().sum().sum() == 0
@@ -169,11 +167,9 @@ def test_time_resampling_index(kedro_env: str, catalog_entry: str):
     parameters = config['parameters']
     prep = dtp.Preprocessing(parameters)
 
-    path = utl.load_csv_from_catalog(kedro_env,
+    df_sample = utl.load_csv_from_catalog(kedro_env,
         config_entry=catalog_entry, entry_name='csv_sample_catalog_preprocessed_stage_01'
         )
-    data_set = CSVDataSet(filepath=path)
-    df_sample = data_set.load()
 
     # Index is datetime?
     df_out = prep.time_resampling(df_sample)
@@ -205,11 +201,9 @@ def test_time_resampling_diff(kedro_env: str, catalog_entry: str, resample: str)
     parameters = config['parameters']
     prep = dtp.Preprocessing(parameters)
 
-    path = utl.load_csv_from_catalog(kedro_env,
+    df_sample = utl.load_csv_from_catalog(kedro_env,
         config_entry=catalog_entry, entry_name='csv_sample_catalog_preprocessed_stage_01'
         )
-    data_set = CSVDataSet(filepath=path)
-    df_sample = data_set.load()
 
     # Index is datetime?
     df_out = prep.time_resampling(df_sample, resample=resample)
@@ -247,11 +241,9 @@ def test_time_resampling_val_error(kedro_env: str, catalog_entry: str, resample:
     parameters = config['parameters']
     prep = dtp.Preprocessing(parameters)
 
-    path = utl.load_csv_from_catalog(kedro_env,
+    df_sample = utl.load_csv_from_catalog(kedro_env,
         config_entry=catalog_entry, entry_name='csv_sample_catalog_preprocessed_stage_01'
         )
-    data_set = CSVDataSet(filepath=path)
-    df_sample = data_set.load()
 
     # Index is datetime?
     with pytest.raises(ValueError):
