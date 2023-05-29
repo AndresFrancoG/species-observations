@@ -40,7 +40,7 @@ install:
 	@$(PIP_BIN) install -r requirements.txt
 
 lint:
-	black .
+	.venv/bin/black .
 
 test:
 	.venv/bin/jupyter nbconvert --clear-output --inplace $(SOURCES)
