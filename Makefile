@@ -39,6 +39,9 @@ install:
 	@$(PIP_BIN) install --upgrade pip
 	@$(PIP_BIN) install -r requirements.txt
 
+lint:
+	black .
+
 test:
 	.venv/bin/jupyter nbconvert --clear-output --inplace $(SOURCES)
 	.venv/bin/pytest --nbval $(SOURCES)
