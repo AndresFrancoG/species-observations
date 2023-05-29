@@ -7,7 +7,10 @@ import pandas as pd
 
 from species_observations.scripts.data_processing import Preprocessing
 
-def node_preprocessing_time_data(df_raw: pd.DataFrame, parameters: Dict) -> pd.DataFrame:
+
+def node_preprocessing_time_data(
+    df_raw: pd.DataFrame, parameters: Dict
+) -> pd.DataFrame:
     """Raw data preprocessing
 
     Parameters

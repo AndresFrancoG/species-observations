@@ -9,9 +9,9 @@ import species_observations.utils as utl
 
 
 class Preprocessing:
-    """Contains preprocessing methods for the project species_observation
-    """
-    def __init__(self, parameters: Dict, catalog_entry = 'preprocessing'):
+    """Contains preprocessing methods for the project species_observation"""
+
+    def __init__(self, parameters: Dict, catalog_entry="preprocessing"):
         """Defines the parameters necessary for data preprocessing in the current project.
 
         Parameters
@@ -19,18 +19,20 @@ class Preprocessing:
         parameters : Dict
             Dictionary with parameters loaded through kedro with .yml files.
         """
-        self._full_cols = parameters['data_cols']
-        self._date_col = self._full_cols['event_date']
-        self._count_col = self._full_cols['individual_count']
+        self._full_cols = parameters["data_cols"]
+        self._date_col = self._full_cols["event_date"]
+        self._count_col = self._full_cols["individual_count"]
 
         self._preproc_params = parameters[catalog_entry]
-        self._resample = self._preproc_params['resampling_period']
-        self._allowed_resamples = ['D', 'M']
+        self._resample = self._preproc_params["resampling_period"]
+        self._allowed_resamples = ["D", "M"]
         if self._resample not in self._allowed_resamples:
-            raise ValueError(f""" 'resampling_period' can only take values of {self._allowed_resamples}.
-'{self._resample}' was given""")
+            raise ValueError(
+                f""" 'resampling_period' can only take values of {self._allowed_resamples}.
+'{self._resample}' was given"""
+            )
 
-        self._datetime_suffix = '_datetime'
+        self._datetime_suffix = "_datetime"
 
     def get_date_col(self) -> str:
         """Allows access to the contents of protected attribute _date_col
@@ -61,17 +63,17 @@ class Preprocessing:
             Contents of _datetime_suffix
         """
         return self._resample
-    
+
     def preprocessing_time_data(self, df_in: pd.DataFrame) -> pd.DataFrame:
-        """Fills NaN in the column count_col with zeros.  
-            Takes the column date_col of type string and transforms it to datetime. 
+        """Fills NaN in the column count_col with zeros.
+            Takes the column date_col of type string and transforms it to datetime.
             Stores it in a new column of name date_col + "_datetime"
             count_col and date_col are defined at the constructor through 'parameters'
 
         Parameters
         ----------
         df_in : pd.DataFrame or dict of dataframes loaded from partitioned data
-            Info to be processed.  If dict, first concatenates all entries into 
+            Info to be processed.  If dict, first concatenates all entries into
             a single df
 
         Returns
@@ -92,7 +94,9 @@ class Preprocessing:
 
         return df_out
 
-    def time_resampling(self, df_in: pd.DataFrame, resample : str = None) -> pd.DataFrame:
+    def time_resampling(
+        self, df_in: pd.DataFrame, resample: str = None
+    ) -> pd.DataFrame:
         """Resamples df to the frequency specified by "resample".
             Used the column date_col_datetime as basis for the resample,
             and sets the resampled date_col_datetime as index
@@ -114,8 +118,10 @@ class Preprocessing:
         if resample is None:
             resample = self._resample
         if resample not in self._allowed_resamples:
-            raise ValueError(f""" 'resample' can only take values of {self._allowed_resamples}.
-'{resample}' was given""")
+            raise ValueError(
+                f""" 'resample' can only take values of {self._allowed_resamples}.
+'{resample}' was given"""
+            )
 
         if not is_datetime(df_in[date_col_datetime]):
             df_in[date_col_datetime] = pd.to_datetime(df_in[date_col_datetime])

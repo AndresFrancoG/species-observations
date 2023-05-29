@@ -9,10 +9,8 @@ import species_observations.scripts.data_processing as dtp
 
 
 @pytest.mark.parametrize(
-        ('kedro_env', 'config_entry'),
-        [
-            ('test_cloud', 'preprocessing')
-    ])
+    ("kedro_env", "config_entry"), [("test_cloud", "preprocessing")]
+)
 def test_load_pds_from_catalog(kedro_env: str, config_entry: str):
     """Test cases:
         Path is a directory
@@ -30,11 +28,7 @@ def test_load_pds_from_catalog(kedro_env: str, config_entry: str):
     assert dataset is not None
 
 
-@pytest.mark.parametrize(
-        ('kedro_env','expected_type'),
-        [
-            ('test_cloud', dict)
-    ])
+@pytest.mark.parametrize(("kedro_env", "expected_type"), [("test_cloud", dict)])
 def test_load_config_file_kedro(kedro_env: str, expected_type: type):
     """Test cases:
         Catalog and parameters are loaded as the expected type. Typically a dict
@@ -46,17 +40,18 @@ def test_load_config_file_kedro(kedro_env: str, expected_type: type):
     expected_type : type
         Expected type of the loaded info.
     """
-    config = utl.load_config_file_kedro(kedro_env = kedro_env)
-    assert isinstance(config['catalog'], expected_type)
-    assert isinstance(config['parameters'], expected_type)
+    config = utl.load_config_file_kedro(kedro_env=kedro_env)
+    assert isinstance(config["catalog"], expected_type)
+    assert isinstance(config["parameters"], expected_type)
 
 
 @pytest.mark.parametrize(
-        ('kedro_env','expected_type','expected_item_type'),
-        [
-            ('test_cloud', dict, pd.DataFrame)
-    ])
-def test_load_partitioned_ds_kedro(kedro_env: str, expected_type: type, expected_item_type: type):
+    ("kedro_env", "expected_type", "expected_item_type"),
+    [("test_cloud", dict, pd.DataFrame)],
+)
+def test_load_partitioned_ds_kedro(
+    kedro_env: str, expected_type: type, expected_item_type: type
+):
     """Test cases:
         The loaded partitioned dataset is of the expected type, typically dict
         The individual items of the partitioned dataset are of the expected type,
@@ -75,15 +70,11 @@ def test_load_partitioned_ds_kedro(kedro_env: str, expected_type: type, expected
     ds_dict = utl.load_partitioned_ds_kedro(path, dataset)
 
     assert isinstance(ds_dict, expected_type)
-    for _,value in ds_dict.items():
+    for _, value in ds_dict.items():
         assert isinstance(value(), expected_item_type)
 
 
-@pytest.mark.parametrize(
-        ('kedro_env','expected_type'),
-        [
-            ('test_cloud', pd.DataFrame)
-    ])
+@pytest.mark.parametrize(("kedro_env", "expected_type"), [("test_cloud", pd.DataFrame)])
 def test_partitioned_ds_to_df(kedro_env: str, expected_type: type):
     """Test cases:
         Data is loaded as the expected type. Typically pd.DataFrame
@@ -101,16 +92,17 @@ def test_partitioned_ds_to_df(kedro_env: str, expected_type: type):
     ds_dict = utl.load_partitioned_ds_kedro(path, dataset)
     df_sample = utl.partitioned_ds_to_df(ds_dict)
     assert isinstance(df_sample, expected_type)
-    for _,value in ds_dict.items():
+    for _, value in ds_dict.items():
         assert (value().columns == df_sample.columns).all()
 
 
 @pytest.mark.parametrize(
-        ('kedro_env','attribute_list', 'type_mapping'),
-        [
-            ('test_cloud', {'_full_cols': 'dict'}, { 'dict': dict})
-    ])
-def test_attribute_names_types(kedro_env: str, attribute_list: Dict, type_mapping: Dict):
+    ("kedro_env", "attribute_list", "type_mapping"),
+    [("test_cloud", {"_full_cols": "dict"}, {"dict": dict})],
+)
+def test_attribute_names_types(
+    kedro_env: str, attribute_list: Dict, type_mapping: Dict
+):
     """Test cases:
             All keys of returned dictionary are in the keys of type_mapping
             All items of the returned dictionary have the keys 'value' and 'type'
@@ -123,39 +115,32 @@ def test_attribute_names_types(kedro_env: str, attribute_list: Dict, type_mappin
     type_mapping : Dict
         _description_
     """
-    config = utl.load_config_file_kedro(kedro_env = kedro_env)
-    parameters = config['parameters']
+    config = utl.load_config_file_kedro(kedro_env=kedro_env)
+    parameters = config["parameters"]
     prep = dtp.Preprocessing(parameters)
-    name_types = utl.attribute_names_types(attribute_list,
-                                           prep, type_mapping)
+    name_types = utl.attribute_names_types(attribute_list, prep, type_mapping)
     for key, value in name_types.items():
         assert key in attribute_list.keys()
-        assert 'value' in list(value.keys())
-        assert 'type' in list(value.keys())
+        assert "value" in list(value.keys())
+        assert "type" in list(value.keys())
 
 
-@pytest.mark.parametrize(
-        ('filepath'),
-        [
-            ('data//01_raw//species_bigQuery_sample.csv')
-    ])
+@pytest.mark.parametrize(("filepath"), [("data//01_raw//species_bigQuery_sample.csv")])
 def test_load_csv_from_filepath_type(filepath):
     """Test cases:
-            Output is of type pd.DataFrame           
+            Output is of type pd.DataFrame
     Parameters
     ----------
     filepath : str
         Location of csv
-    """    
+    """
     df_sample = utl.load_csv_from_filepath(filepath)
     assert isinstance(df_sample, pd.DataFrame)
 
 
 @pytest.mark.parametrize(
-        ('filepath'),
-        [
-            ('species-observations//data//01_raw//species_bigQuery_sample.csv')
-    ])
+    ("filepath"), [("species-observations//data//01_raw//species_bigQuery_sample.csv")]
+)
 def test_load_csv_from_filepath_error(filepath):
     """Test cases:
             Exception on invalid path
@@ -163,6 +148,6 @@ def test_load_csv_from_filepath_error(filepath):
     ----------
     filepath : str
         Invalid path
-    """      
+    """
     with pytest.raises(Exception):
         utl.load_csv_from_filepath(filepath)
