@@ -37,7 +37,7 @@ install_gcp:
 	
 install:
 	@$(PIP_BIN) install --upgrade pip
-	@$(PIP_BIN) install -r requirements.txt
+	@$(PIP_BIN) install -r src/requirements.txt
 
 lint:
 	.venv/bin/black .

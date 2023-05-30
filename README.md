@@ -117,6 +117,35 @@ To automatically strip out all output cell contents before committing to `git`, 
 
 > *Note:* Your output cells will be retained locally.
 
-## Package your Kedro project
+# Build
+From a PC with the functional Kedro project (development server) installed, install the plugin for generating the Docker file:
+```
+pip install kedro-docker
+```
+and generate the Docker file:
 
-[Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html)
+```
+kedro docker build --image <image_name>
+```   
+Make sure that the project folder name is completely in lowercase.
+
+Other useful commands for managing the Docker image (on Linux) are:
+
+- Save Docker image as a tar file:
+```
+sudo docker save -o <ruta_archivo_tar> <image_name>
+```
+- Load image:
+```
+sudo docker load -i <ruta_archivo_tar>
+```
+- Copy image to USB:
+```
+sudo cp -i <ruta_archivo_tar> /media/user/drive_name
+```
+
+# Run Docker image
+To run the Docker image, use the following command (make sure not to add spaces around the equals sign):
+```
+docker run -it -e pipeline_name=<pipeline_name> -e env_name=<env_name> <image_name>
+```
