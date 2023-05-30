@@ -2,6 +2,7 @@
 VENV_NAME := .venv
 PYTHON_BIN := python3
 PIP_BIN := $(VENV_NAME)/bin/pip
+DOCKER_REPO := andresfrancog/species-observations
 
 # Set the root directory where subdirectories and notebooks are located
 ROOT_DIR := notebooks
@@ -23,7 +24,7 @@ help:
 	@echo "  test_cloud    Cleans noteboouk outputs, runs unit tests for the project and checks if notebooks execute correctly using the test_cloud env"
 	@echo "  clean         Remove the virtual environment and installed packages"
 	@echo "  all           Executes: create_venv install test clean"
-	@echo "  all_cloud     Executes: create_venv install test_cloud clean"
+	@echo "  docker_push   Pushes docker image with version 'latest' to remote repository.  Modify the variable DOCKER_REPO in makefile as needed."
 
 create_venv:
 	$(PYTHON_BIN) -m venv $(VENV_NAME)
@@ -54,3 +55,7 @@ clean:
 	rm -rf $(VENV_NAME)
 
 all: create_venv install test clean
+
+docker_push:
+	docker tag species-observations:latest $(DOCKER_REPO):latest
+	docker push  $(DOCKER_REPO):latest
