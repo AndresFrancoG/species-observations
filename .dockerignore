@@ -7,6 +7,8 @@ Dockerfile
 
 # ignore potentially sensitive credentials files
 conf/**/*credentials*
+# Except the route for the json with service account details
+!conf/**/*credentials_gcp_json*
 
 # ignore all local configuration
 conf/local

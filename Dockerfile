@@ -26,4 +26,4 @@ EXPOSE 8888
 RUN mkdir /home/kedro/
 RUN /bin/echo "kedro run --pipeline ${pipeline_name}" > /home/kedro/run_kedro.sh
 RUN chmod +x /home/kedro/run_kedro.sh
-CMD kedro run --pipeline $pipeline_name --env=$env_name --params site:CMA
+CMD kedro run --pipeline $pipeline_name --env=$env_name

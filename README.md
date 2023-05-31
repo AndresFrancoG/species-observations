@@ -147,5 +147,17 @@ sudo cp -i <ruta_archivo_tar> /media/user/drive_name
 # Run Docker image
 To run the Docker image, use the following command (make sure not to add spaces around the equals sign):
 ```
-docker run -it -e pipeline_name=<pipeline_name> -e env_name=<env_name> <image_name>
+docker run  -v /<path_to_service_account_file>/<service_account.json>:<path_file_name_credentials>.json -e pipeline_name=<pipeline_name> -e env_name=<env_name> <image_name>
 ```
+
+This assumes the existence of a credentials_gcp_json.yml that contains the location of the .json with the gcp service account details, that 
+has the following format:
+```
+gcp_creds:
+  token: <path_file_name_credentials>.json
+  ```
+The code 
+```
+-v /<path_to_service_account_file>/<service_account.json>:<path_file_name_credentials>.json
+```
+copies the json file from a local or cloud location into the container for authentications purposes.
