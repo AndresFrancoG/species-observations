@@ -2,7 +2,7 @@
 VENV_NAME := .venv
 PYTHON_BIN := python3
 PIP_BIN := $(VENV_NAME)/bin/pip
-DOCKER_REPO := andresfrancog/species-observations
+DOCKER_REPO := southamerica-east1-docker.pkg.dev/bigqueryspecies/species-observations-container/species-observations
 
 # Set the root directory where subdirectories and notebooks are located
 ROOT_DIR := notebooks
@@ -58,4 +58,4 @@ all: create_venv install test clean
 
 docker_push:
 	docker tag species-observations:latest $(DOCKER_REPO):latest
-	docker push  $(DOCKER_REPO):latest
+	docker push $(DOCKER_REPO):latest
