@@ -3,17 +3,18 @@
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 
-bq_test:
-  type: pandas.GBQQueryDataSet
-  sql: " SELECT name, SUM(number) as total_people
-    FROM bigquery-public-data.usa_names.usa_1910_2013
-    WHERE state = 'TX'
-    GROUP BY name, state
-    ORDER BY total_people DESC
-    LIMIT 20 "
-  project: 'bigqueryspecies'
-  load_args:
-    reauth: True
+# bq_test:
+#   type: pandas.GBQQueryDataSet
+#   credentials: gcp_creds
+#   sql: " SELECT name, SUM(number) as total_people
+#     FROM bigquery-public-data.usa_names.usa_1910_2013
+#     WHERE state = 'TX'
+#     GROUP BY name, state
+#     ORDER BY total_people DESC
+#     LIMIT 20 "
+#   project: 'bigqueryspecies'
+#   load_args:
+#     reauth: True
 
 species_data:
   type: PartitionedDataSet

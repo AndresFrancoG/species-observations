@@ -1,0 +1,35 @@
+##########################
+# Kedro PROJECT
+
+# ignore Dockerfile and .dockerignore
+Dockerfile
+.dockerignore
+
+# ignore potentially sensitive credentials files
+conf/**/*credentials*
+# Except the route for the json with service account details
+!conf/**/*credentials_gcp_json*
+
+# ignore all local configuration
+conf/local
+!conf/local/.gitkeep
+
+# ignore everything in the following folders
+data
+logs
+notebooks
+references
+results
+
+# except the following
+!logs/.gitkeep
+!notebooks/.gitkeep
+!references/.gitkeep
+!results/.gitkeep
+
+# except their sub-folders
+!data/**/
+!logs/**/
+
+# except sample data for unit testing
+!data/**/*_sample*.csv
