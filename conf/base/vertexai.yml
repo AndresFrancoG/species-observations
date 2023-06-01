@@ -1,17 +1,17 @@
 
 # Configuration used to run the pipeline
-project_id: "${gcp_globals.project_id}"
-region: "${gcp_globals.region}"
+project_id: bigqueryspecies
+region: southamerica-east1
 run_config:
   # Name of the image to run as the pipeline steps
-  image: "${gcp_globals.container_url}":${gcp_globals.container_tag}"
+  image: southamerica-east1-docker.pkg.dev/bigqueryspecies/species-observations-container/species-observations:latest
 
   # Pull policy to be used for the steps. Use Always if you push the images
   # on the same tag, or Never if you use only local images
   image_pull_policy: IfNotPresent
 
   # Location of Vertex AI GCS root
-  root: "${gcp_globals.bucket_name}"
+  root: bigqueryspecies-container-bucket
 
   # Prefix of Vertex AI pipeline run
   experiment_name: species-observations
@@ -20,7 +20,7 @@ run_config:
   scheduled_run_name: species-observations
 
   # Optional service account to run vertex AI Pipeline with
-  service_account: "${gcp_globals.service_account}"
+  service_account: container-run-gcp@bigqueryspecies.iam.gserviceaccount.com
 
   # Optional pipeline description
   # description: "Very Important Pipeline"

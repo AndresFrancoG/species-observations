@@ -11,7 +11,7 @@ species_data:
 
 resampled_data:
   type: pandas.CSVDataSet
-  filepath: data//02_intermediate//species_bigQuery_resampled_obs_sample.csv
+  filepath: gs://${run_config.root}//species_bigQuery_resampled_obs_sample.csv    #data//02_intermediate//species_bigQuery_resampled_obs_sample.csv
   save_args:
     sep: ","      
     index: True
