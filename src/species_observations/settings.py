@@ -33,7 +33,12 @@ https://kedro.readthedocs.io/en/stable/kedro_project_setup/settings.html."""
 #           "parameters": ["parameters*", "parameters*/**", "**/parameters*"],
 #       }
 # }
+from kedro.config import TemplatedConfigLoader  # new import
 
+CONFIG_LOADER_CLASS = TemplatedConfigLoader
+
+CONFIG_LOADER_ARGS = { "globals_pattern": "*vertexai.yml",
+                       "config_patterns": {"vertexai": ["vertexai*"]}}
 # Class that manages the Data Catalog.
 # from kedro.io import DataCatalog
 # DATA_CATALOG_CLASS = DataCatalog

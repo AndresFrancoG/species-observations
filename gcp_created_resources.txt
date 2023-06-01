@@ -1,5 +1,3 @@
 allow access to vortex AI API
 bucket storage
-
-updates permission to access all cloud services accessed by vertexai
-gcloud projects add-iam-policy-binding bigqueryspecies --member="serviceAccount:kedro-projects@bigqueryspecies.iam.gserviceaccount.com" --role="roles/editor"
+allow access to artifact registryAPI: gcloud auth configure-docker southamerica-east1-docker.pkg.dev

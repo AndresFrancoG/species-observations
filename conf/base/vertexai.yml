@@ -4,7 +4,7 @@ project_id: bigqueryspecies
 region: southamerica-east1
 run_config:
   # Name of the image to run as the pipeline steps
-  image: docker.io/andresfrancog/species-observations:latest
+  image: southamerica-east1-docker.pkg.dev/bigqueryspecies/species-observations-container/species-observations:latest
 
   # Pull policy to be used for the steps. Use Always if you push the images
   # on the same tag, or Never if you use only local images

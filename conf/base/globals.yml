@@ -1,0 +1,7 @@
+gcp_globals:
+  project_id: bigqueryspecies
+  region: southamerica-east1
+  service_account: container-run-gcp@bigqueryspecies.iam.gserviceaccount.com
+  bucket_name: bigqueryspecies-container-bucket
+  container_url: southamerica-east1-docker.pkg.dev/bigqueryspecies/species-observations-container
+  container_tag: latest

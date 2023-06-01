@@ -12,7 +12,7 @@
 #     GROUP BY name, state
 #     ORDER BY total_people DESC
 #     LIMIT 20 "
-#   project: 'bigqueryspecies'
+#   project: "${gcp_globals.project_id}"
 #   load_args:
 #     reauth: True
 
