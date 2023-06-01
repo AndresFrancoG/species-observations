@@ -4,14 +4,14 @@ project_id: bigqueryspecies
 region: southamerica-east1
 run_config:
   # Name of the image to run as the pipeline steps
-  image: andresfrancog/species-observations:latest
+  image: docker.io/andresfrancog/species-observations:latest
 
   # Pull policy to be used for the steps. Use Always if you push the images
   # on the same tag, or Never if you use only local images
   image_pull_policy: IfNotPresent
 
   # Location of Vertex AI GCS root
-  root: species-observations-bucket/vertexai
+  root: bigqueryspecies-container-bucket
 
   # Prefix of Vertex AI pipeline run
   experiment_name: species-observations
@@ -20,7 +20,7 @@ run_config:
   scheduled_run_name: species-observations
 
   # Optional service account to run vertex AI Pipeline with
-  service_account: kedro-projects@bigqueryspecies.iam.gserviceaccount.com
+  service_account: container-run-gcp@bigqueryspecies.iam.gserviceaccount.com
 
   # Optional pipeline description
   # description: "Very Important Pipeline"

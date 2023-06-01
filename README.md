@@ -147,17 +147,12 @@ sudo cp -i <ruta_archivo_tar> /media/user/drive_name
 # Run Docker image
 To run the Docker image, use the following command (make sure not to add spaces around the equals sign):
 ```
-docker run  -v /<path_to_service_account_file>/<service_account.json>:<path_file_name_credentials>.json -e pipeline_name=<pipeline_name> -e env_name=<env_name> <image_name>
+docker run  -v -e pipeline_name=<pipeline_name> -e env_name=<env_name> <image_name>
 ```
-
-This assumes the existence of a credentials_gcp_json.yml that contains the location of the .json with the gcp service account details, that 
-has the following format:
+# Run Vertex-AI
+To run the job on GCP's vertexAI, the plugin kedro-vertexai is used.  Simply run
 ```
-gcp_creds:
-  token: <path_file_name_credentials>.json
-  ```
-The code 
+kedro vertexai -e <environment> run-once
 ```
--v /<path_to_service_account_file>/<service_account.json>:<path_file_name_credentials>.json
-```
-copies the json file from a local or cloud location into the container for authentications purposes.
+Modify the configuration file conf/base/vertexai.yml to ensure it connects to your docker image, GCP project and bucket. 
+More info at https://kedro-vertexai.readthedocs.io/en/0.9.0/index.html
